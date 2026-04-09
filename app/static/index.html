@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SVG Converter — Image to SVG</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#4f46e5"/>
+          <path d="M8 22 L14 10 L20 18 L24 14 L28 22 Z" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="10" cy="12" r="2.5" fill="white" opacity="0.7"/>
+        </svg>
+        <span class="logo-text">SVG Converter</span>
+      </div>
+      <p class="tagline">Convert any image to clean, scalable SVG — optimised for logos and brand marks</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left panel: upload + options -->
+    <section class="panel upload-panel">
+      <h2 class="panel-title">Upload Image</h2>
+
+      <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Drop image here or click to browse">
+        <div class="drop-zone-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 32V16M24 16L18 22M24 16L30 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 34C7.2 34 5 31.8 5 29C5 26.6 6.7 24.6 9 24.1C9 24 9 23.5 9 23C9 18.6 12.6 15 17 15C17.3 15 17.7 15 18 15.1C19.5 12.6 22.1 11 25 11C29.4 11 33 14.6 33 19C33 19.2 33 19.3 33 19.5C35.8 20.3 38 22.9 38 26C38 29.3 35.3 32 32 32" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="drop-zone-text">Drag &amp; drop your image here</p>
+        <p class="drop-zone-subtext">or <span class="browse-link">browse files</span></p>
+        <p class="drop-zone-formats">PNG, JPG, GIF, BMP, WEBP, TIFF — up to 10 MB</p>
+        <input type="file" id="file-input" accept="image/*" aria-hidden="true" />
+      </div>
+
+      <div id="file-info" class="file-info hidden">
+        <svg class="file-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M12 2H6C5.4 2 5 2.4 5 3V17C5 17.6 5.4 18 6 18H14C14.6 18 15 17.6 15 17V5L12 2Z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 2V5H15" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <span id="file-name" class="file-name"></span>
+        <span id="file-size" class="file-size"></span>
+        <button id="clear-btn" class="clear-btn" aria-label="Remove file">×</button>
+      </div>
+
+      <div class="options-grid">
+        <div class="option-group">
+          <label class="option-label" for="preset">
+            Quality preset
+            <span class="option-hint">Higher quality takes longer</span>
+          </label>
+          <div class="select-wrapper">
+            <select id="preset" class="select">
+              <option value="fast">Fast — fewer colors, smooth paths</option>
+              <option value="balanced" selected>Balanced — best for most logos</option>
+              <option value="high_quality">High Quality — max detail &amp; precision</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label class="option-label toggle-label" for="remove-bg">
+            <span>
+              Remove white background
+              <span class="option-hint">Ideal for logos on white</span>
+            </span>
+            <div class="toggle-wrapper">
+              <input type="checkbox" id="remove-bg" class="toggle-input" />
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button id="convert-btn" class="btn btn-primary" disabled>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3 9C3 5.7 5.7 3 9 3C11 3 12.8 4 14 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M15 9C15 12.3 12.3 15 9 15C7 15 5.2 14 4 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M14 3L14 6L11 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 15L4 12L7 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Convert to SVG
+      </button>
+    </section>
+
+    <!-- Right panel: result -->
+    <section class="panel result-panel">
+      <h2 class="panel-title">Result</h2>
+
+      <div id="result-empty" class="result-empty">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="6" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
+          <path d="M24 32 L28 28 L32 34 L36 30 L40 36" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p>Your SVG will appear here</p>
+      </div>
+
+      <div id="result-content" class="result-content hidden">
+        <div class="preview-grid">
+          <figure class="preview-figure">
+            <figcaption>Original</figcaption>
+            <div class="preview-box checker">
+              <img id="original-preview" class="preview-img" alt="Original image" />
+            </div>
+          </figure>
+          <figure class="preview-figure">
+            <figcaption>SVG Output</figcaption>
+            <div class="preview-box checker">
+              <img id="svg-preview" class="preview-img" alt="SVG result" />
+            </div>
+          </figure>
+        </div>
+
+        <div class="result-meta">
+          <span id="svg-size" class="meta-tag"></span>
+          <span id="svg-preset" class="meta-tag"></span>
+        </div>
+
+        <a id="download-btn" class="btn btn-download" download="logo.svg">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2V12M9 12L5 8M9 12L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Download SVG
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="loading-overlay hidden" aria-live="polite">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p class="loading-text">Converting to SVG…</p>
+      <p class="loading-subtext">Tracing paths and optimising vectors</p>
+    </div>
+  </div>
+
+  <!-- Status / error bar -->
+  <div id="status-bar" class="status-bar hidden" role="alert"></div>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
