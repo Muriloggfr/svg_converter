@@ -42,7 +42,7 @@ PRESETS = {
         "colormode": "color",
         "hierarchical": "cutout",
         "filter_speckle": 1,
-        "color_precision": 10,
+        "color_precision": 8,
         "corner_threshold": 60,
         "length_threshold": 1.5,
         "splice_threshold": 45,
