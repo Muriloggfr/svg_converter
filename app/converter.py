@@ -7,7 +7,7 @@ then scour for SVG cleanup and optimization.
 
 import io
 
-from PIL import Image, ImageStat
+from PIL import Image
 from scour.scour import generateDefaultOptions, sanitizeOptions, scourString
 import vtracer
 
@@ -19,21 +19,21 @@ PRESETS = {
     "fast": {
         "colormode": "color",
         "hierarchical": "cutout",
-        "filter_speckle": 8,
-        "color_precision": 4,
+        "filter_speckle": 6,
+        "color_precision": 6,
         "corner_threshold": 60,
-        "length_threshold": 6.0,
+        "length_threshold": 4.0,
         "splice_threshold": 45,
-        "path_precision": 4,
+        "path_precision": 5,
         "scour_digits": 2,
     },
     "balanced": {
         "colormode": "color",
         "hierarchical": "cutout",
-        "filter_speckle": 4,
-        "color_precision": 6,
+        "filter_speckle": 3,
+        "color_precision": 8,
         "corner_threshold": 60,
-        "length_threshold": 4.0,
+        "length_threshold": 3.0,
         "splice_threshold": 45,
         "path_precision": 6,
         "scour_digits": 4,
@@ -41,10 +41,10 @@ PRESETS = {
     "high_quality": {
         "colormode": "color",
         "hierarchical": "cutout",
-        "filter_speckle": 2,
-        "color_precision": 8,
+        "filter_speckle": 1,
+        "color_precision": 10,
         "corner_threshold": 60,
-        "length_threshold": 2.0,
+        "length_threshold": 1.5,
         "splice_threshold": 45,
         "path_precision": 8,
         "scour_digits": 5,
@@ -66,15 +66,6 @@ _MIN_DIM = 256
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
-
-def _is_grayscale(img: Image.Image) -> bool:
-    """Return True if the image is essentially monochrome / grayscale."""
-    rgb = img.convert("RGB")
-    stat = ImageStat.Stat(rgb)
-    r, g, b = stat.mean
-    max_diff = max(abs(r - g), abs(g - b), abs(r - b))
-    return max_diff < 10
-
 
 def _has_white_background(img: Image.Image) -> bool:
     """Return True when 3+ of the 4 corner pixels are near-white."""
@@ -199,14 +190,7 @@ def convert_to_svg(
     # Preprocess to PNG bytes
     png_bytes = preprocess_image(image_bytes, remove_bg)
 
-    # Auto-detect grayscale → use binary mode for sharper single-colour paths
-    try:
-        probe = Image.open(io.BytesIO(png_bytes)).convert("RGB")
-        if _is_grayscale(probe):
-            params = {**params, "colormode": "binary"}
-    except Exception:
-        pass
-
+    # Always use color mode — preserves grays, tints and all fills faithfully
     # Build vtracer kwargs (exclude internal keys)
     vtracer_kwargs = {k: v for k, v in params.items() if k in _VTRACER_KEYS}
 
