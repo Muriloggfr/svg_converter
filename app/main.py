@@ -40,7 +40,7 @@ _ALLOWED_TYPES = {
     "application/octet-stream",  # some browsers send this for unknown types
 }
 
-_MAX_BYTES = 10 * 1024 * 1024  # 10 MB
+_MAX_BYTES = 5 * 1024 * 1024  # 5 MB — conservative for free-tier memory limits
 
 
 # ---------------------------------------------------------------------------

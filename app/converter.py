@@ -57,8 +57,8 @@ _VTRACER_KEYS = {
     "corner_threshold", "length_threshold", "splice_threshold", "path_precision",
 }
 
-# Max dimension (px) before downscaling — prevents multi-second traces on large photos
-_MAX_DIM = 2048
+# Max dimension (px) before downscaling — keeps memory usage low on free-tier hosts
+_MAX_DIM = 1024
 # Min dimension (px) before upscaling — ensures vtracer has enough data for clean curves
 _MIN_DIM = 256
 
